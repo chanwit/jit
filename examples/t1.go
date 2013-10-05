@@ -41,7 +41,7 @@ func main() {
     f.Compile()
 
     // Dump the result to standard output
-    f.Dump()
+    f.Dump("mul_add")
 
     // Unlock the context
     ctx.BuildEnd()
