@@ -17,14 +17,12 @@ func main() {
 
     f := ctx.NewFunction(UInt(), []Type{UInt(), UInt()})
 
-    /* Check the condition "if(x == y)" */
-
     x, y := f.Param2()
 
     label1 := NewLabel()
     label2 := NewLabel()
 
-    // if (x == y)
+    // Check the condition "if(x == y)"
     t1 := f.Eq(x, y)
     f.BranchIfNot(t1, label1)
 
