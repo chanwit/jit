@@ -34,7 +34,7 @@ type Value struct {
 }
 
 type Label struct {
-    C *C.jit_label_t
+    C C.jit_label_t
 }
 
 var intType = Type{ C.jit_type_int }
@@ -114,11 +114,11 @@ func (f *Function) Eq(a, b *Value) *Value {
 }
 
 func (f *Function) BranchIfNot(v *Value, label *Label) {
-    C.jit_insn_branch_if_not(f.C, v.C, label.C)
+    C.jit_insn_branch_if_not(f.C, v.C, (*C.jit_label_t)(unsafe.Pointer(label)))
 }
 
 func (f *Function) Label(label *Label) {
-    C.jit_insn_label(f.C, label.C)
+    C.jit_insn_label(f.C, (*C.jit_label_t)(unsafe.Pointer(label)))
 }
 
 func (f *Function) LessThan(a, b *Value) *Value {
@@ -173,8 +173,10 @@ func (f *Function) Dump(name string) {
 }
 
 func NewLabel() *Label {
-    result := &Label{}
+    return &Label{C.jit_label_undefined}
+    /*
     result.C = new(C.jit_label_t)
     (*result.C) = C.jit_label_undefined
     return result
+    */
 }
