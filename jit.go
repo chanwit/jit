@@ -79,18 +79,18 @@ func (c *Context) NewFunction(ret Type, params []Type) *Function {
 }
 
 func (f *Function) Param(i int) *Value {
-    return &Value{C.jit_value_get_param(f.C, C.uint(i))}
+    return &Value{ C.jit_value_get_param(f.C, C.uint(i)) }
 }
 
 func (f *Function) Param2() (*Value, *Value) {
-    return &Value{C.jit_value_get_param(f.C, C.uint(0))},
-           &Value{C.jit_value_get_param(f.C, C.uint(1))}
+    return &Value{ C.jit_value_get_param(f.C, C.uint(0)) },
+           &Value{ C.jit_value_get_param(f.C, C.uint(1)) }
 }
 
 func (f *Function) Param3() (*Value, *Value, *Value) {
-    return &Value{C.jit_value_get_param(f.C, C.uint(0))},
-           &Value{C.jit_value_get_param(f.C, C.uint(1))},
-           &Value{C.jit_value_get_param(f.C, C.uint(2))}
+    return &Value{ C.jit_value_get_param(f.C, C.uint(0)) },
+           &Value{ C.jit_value_get_param(f.C, C.uint(1)) },
+           &Value{ C.jit_value_get_param(f.C, C.uint(2)) }
 }
 
 func (f *Function) Mul(a, b *Value) *Value {
@@ -173,10 +173,5 @@ func (f *Function) Dump(name string) {
 }
 
 func NewLabel() *Label {
-    return &Label{C.jit_label_undefined}
-    /*
-    result.C = new(C.jit_label_t)
-    (*result.C) = C.jit_label_undefined
-    return result
-    */
+    return &Label{ C.jit_label_undefined }
 }
