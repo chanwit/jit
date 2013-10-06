@@ -152,6 +152,16 @@ func (f *Function) Call(target *Function, values []*Value) *Value {
                     target.C, nil, (*C.jit_value_t)(&args[0]), C.uint(len(args)), C.int(0)) }
 }
 
+func (f *Function) Call0(name string, target *Function, values ...*Value) *Value {
+    args := make([]C.jit_value_t, len(values))
+    for i := range values {
+        args[i] = values[i].C
+    }
+    return &Value{ C.jit_insn_call(f.C,
+                    C.CString(name),
+                    target.C, nil, (*C.jit_value_t)(&args[0]), C.uint(len(args)), C.int(0)) }
+}
+
 func (f *Function) Compile() {
     C.jit_function_compile(f.C)
 }
