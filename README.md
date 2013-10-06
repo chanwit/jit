@@ -7,6 +7,8 @@ A `libjit` wrapper for Golang.
 
 Suranaree University of Technology, Thailand
 
+This software is licensed under LGPL.
+
 How to install
 --------------
 
