@@ -6,7 +6,7 @@ package main
 */
 import "C"
 import "fmt"
-import . "../../jit"
+import . "github.com/chanwit/jit"
 
 func compile_mul_add(function *Function) bool {
     fmt.Println(">> Recompile ...")
