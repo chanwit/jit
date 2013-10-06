@@ -1,10 +1,5 @@
 package main
-/*
-#cgo LDFLAGS: -lm -ljit
-#include <jit/jit.h>
-#include <jit/jit-dump.h>
-*/
-import "C"
+
 import "fmt"
 import . "github.com/chanwit/jit"
 
