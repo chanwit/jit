@@ -4,9 +4,15 @@ package jit
 #include <stdio.h>
 #include <jit/jit.h>
 #include <jit/jit-dump.h>
+
+extern int on_demand_compile(jit_function_t);
+
+static void SetOnDemandCompileFunction(jit_function_t f) {
+    jit_function_set_on_demand_compiler(f, on_demand_compile);
+}
+
 */
 import "C"
-
 import "unsafe"
 
 const CDECL = C.jit_abi_cdecl
@@ -59,6 +65,19 @@ func NewSignature(ret Type, params []Type) *Signature {
     return &Signature{signature}
 }
 
+func NewLabel() *Label {
+    return &Label{ C.jit_label_undefined }
+}
+
+// ========== Context =============
+
+func (c *Context) NewFunction(ret Type, params []Type) *Function {
+    signature := NewSignature(ret, params)
+    function := C.jit_function_create(c.C, signature.C)
+    C.jit_type_free(signature.C)
+    return &Function{C: function, retType: ret, paramType: params}
+}
+
 func (c *Context) BuildStart() {
     C.jit_context_build_start(c.C)
 }
@@ -71,12 +90,10 @@ func (c *Context) Destroy() {
     C.jit_context_destroy(c.C)
 }
 
-func (c *Context) NewFunction(ret Type, params []Type) *Function {
-    signature := NewSignature(ret, params)
-    function := C.jit_function_create(c.C, signature.C)
-    C.jit_type_free(signature.C)
-    return &Function{C: function, retType: ret, paramType: params}
-}
+// ========== Context =============
+
+
+// ========== Function =============
 
 func (f *Function) Param(i int) *Value {
     return &Value{ C.jit_value_get_param(f.C, C.uint(i)) }
@@ -172,6 +189,34 @@ func (f *Function) Dump(name string) {
     C.jit_dump_function((*C.FILE)(C.stdout), f.C, C.CString(name))
 }
 
-func NewLabel() *Label {
-    return &Label{ C.jit_label_undefined }
+func (f *Function) SetRecompilable() {
+    C.jit_function_set_recompilable(f.C)
+}
+
+type compileFunction struct {
+    F           *Function
+    compileFunc func(*Function)bool
+}
+
+var registry = make(map[C.jit_function_t]*compileFunction)
+
+func (f *Function) SetOnDemandCompiler(function func(f *Function)bool) {
+    registry[f.C] = &compileFunction{f, function}
+    C.SetOnDemandCompileFunction(f.C)
+}
+
+func (f *Function) GetOnDemandCompiler() func(*Function)bool {
+    return registry[f.C].compileFunc
+}
+
+// ========== Function =============
+
+//export on_demand_compile
+func on_demand_compile(f C.jit_function_t) C.int {
+    cf := registry[f]
+    result := cf.compileFunc(cf.F)
+    if(result) {
+        return C.int(1)
+    }
+    return C.int(0)
 }
