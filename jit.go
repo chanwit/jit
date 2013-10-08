@@ -62,7 +62,7 @@ func NewSignature(ret Type, params []Type) *Signature {
         ret.C,
         (*C.jit_type_t)(unsafe.Pointer(&params[0])),
         C.uint(len(params)), 1)
-    return &Signature{signature}
+    return &Signature{ signature }
 }
 
 func NewLabel() *Label {
@@ -142,6 +142,16 @@ func (f *Function) LessThan(a, b *Value) *Value {
     return &Value{ C.jit_insn_lt(f.C, a.C, b.C) }
 }
 
+func (f *Function) TailCall(target *Function, values ...*Value) *Value {
+    args := make([]C.jit_value_t, len(values))
+    for i := range values {
+        args[i] = values[i].C
+    }
+    return &Value{ C.jit_insn_call(f.C,
+                    C.CString("noname"),
+                    target.C, nil, (*C.jit_value_t)(&args[0]), C.uint(len(args)), C.JIT_CALL_TAIL }
+}
+
 func (f *Function) Call(target *Function, values []*Value) *Value {
     args := make([]C.jit_value_t, len(values))
     for i := range values {
@@ -196,7 +206,7 @@ func (f *Function) Run(values ...interface{}) interface{} {
 }
 
 func (f *Function) Dump(name string) {
-    C.jit_dump_function((*C.FILE)(C.stdout), f.C, C.CString(name))
+    // C.jit_dump_function((*C.FILE)(C.stdout), f.C, C.CString(name))
 }
 
 func (f *Function) SetRecompilable() {
@@ -218,7 +228,6 @@ func (f *Function) SetOnDemandCompiler(function func(f *Function)bool) {
 func (f *Function) GetOnDemandCompiler() func(*Function)bool {
     return registry[f.C].compileFunc
 }
-
 // ========== Function =============
 
 //export on_demand_compile
