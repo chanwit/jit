@@ -11,6 +11,7 @@ static void SetOnDemandCompileFunction(jit_function_t f) {
     jit_function_set_on_demand_compiler(f, on_demand_compile);
 }
 
+static FILE *getStdout(void) { return stdout; }
 */
 import "C"
 import "unsafe"
@@ -149,7 +150,7 @@ func (f *Function) TailCall(target *Function, values ...*Value) *Value {
     }
     return &Value{ C.jit_insn_call(f.C,
                     C.CString("noname"),
-                    target.C, nil, (*C.jit_value_t)(&args[0]), C.uint(len(args)), C.JIT_CALL_TAIL }
+                    target.C, nil, (*C.jit_value_t)(&args[0]), C.uint(len(args)), C.JIT_CALL_TAIL ) }
 }
 
 func (f *Function) Call(target *Function, values []*Value) *Value {
@@ -206,7 +207,7 @@ func (f *Function) Run(values ...interface{}) interface{} {
 }
 
 func (f *Function) Dump(name string) {
-    // C.jit_dump_function((*C.FILE)(C.stdout), f.C, C.CString(name))
+    C.jit_dump_function(C.getStdout(), f.C, C.CString(name))
 }
 
 func (f *Function) SetRecompilable() {
