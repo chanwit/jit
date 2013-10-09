@@ -1,5 +1,5 @@
-JIT
----
+JIT [![Build Status](https://drone.io/github.com/chanwit/jit/status.png)](https://drone.io/github.com/chanwit/jit/latest)
+---------
 
 A `libjit` wrapper for Golang.
 
