@@ -1,6 +1,8 @@
 package jit
 /*
-#cgo LDFLAGS: -lm -ljit
+#cgo CFLAGS: -I./include
+#cgo LDFLAGS: -L./lib -lm -ljit
+
 #include <stdio.h>
 #include <jit/jit.h>
 #include <jit/jit-dump.h>
