@@ -16,8 +16,10 @@ type FunctionBuilder struct {
     buf  uintptr
 }
 
+type X86Reg byte
+
 const (
-    X86_EAX = iota
+    X86_EAX = X86Reg(iota)
     X86_ECX
     X86_EDX
     X86_EBX
@@ -34,19 +36,19 @@ func (fb *FunctionBuilder) Nop() {
     fb.pc++;
 }
 
-func (fb *FunctionBuilder) PushReg(reg byte) {
+func (fb *FunctionBuilder) PushReg(reg X86Reg) {
     b := (*[1]byte)(unsafe.Pointer(fb.buf + fb.pc))
-    b[0] = byte(0x50) + reg
+    b[0] = byte(0x50) + byte(reg)
     fb.pc++
 }
 
-func (fb *FunctionBuilder) PopReg(reg byte) {
+func (fb *FunctionBuilder) PopReg(reg X86Reg) {
     b := (*[1]byte)(unsafe.Pointer(fb.buf + fb.pc))
-    b[0] = byte(0x58) + reg
+    b[0] = byte(0x58) + byte(reg)
     fb.pc++
 }
 
-func (fb *FunctionBuilder) MovRegReg(dreg byte, reg byte, size byte) {
+func (fb *FunctionBuilder) MovRegReg(dreg X86Reg, reg X86Reg, size byte) {
     b := (*[1]byte)(unsafe.Pointer(fb.buf + fb.pc))
     switch size {
         case 1: b[0] = byte(0x8a)
@@ -59,13 +61,13 @@ func (fb *FunctionBuilder) MovRegReg(dreg byte, reg byte, size byte) {
     fb.RegEmit(dreg, reg)
 }
 
-func (fb *FunctionBuilder) RegEmit(dreg byte, reg byte) {
+func (fb *FunctionBuilder) RegEmit(dreg X86Reg, reg X86Reg) {
     fb.AddressByte(3, dreg, reg)
 }
 
-func (fb *FunctionBuilder) AddressByte(m byte, o byte, r byte) {
+func (fb *FunctionBuilder) AddressByte(m byte, o X86Reg, r X86Reg) {
     b := (*[1]byte)(unsafe.Pointer(fb.buf + fb.pc))
-    b[0] = ((((m)&0x03)<<6)|(((o)&0x07)<<3)|(((r)&0x07)))
+    b[0] = ((((m)&0x03)<<6)|((byte(o)&0x07)<<3)|((byte(r)&0x07)))
     fb.pc++
 }
 
