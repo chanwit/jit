@@ -40,7 +40,7 @@ func main() {
 	// Construct the function body
 	x, y, result := f.Param3()
 
-    // This is native call
+	// This is native call
 	sig := NewSignature(Int(), []Type{Int(), Int()})
 	res := f.CallNative("NativeMult", C.NativeMult, sig, x, y)
 	f.Store(x, res)
