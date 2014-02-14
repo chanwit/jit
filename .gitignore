@@ -1,0 +1,13 @@
+lib/libjit.la
+lib/libjit.so.0.0.1
+lib/libjitdynamic.a
+lib/libjitdynamic.la
+lib/libjitdynamic.so
+lib/libjitdynamic.so.0
+lib/libjitdynamic.so.0.0.1
+lib/libjitplus.a
+lib/libjitplus.la
+lib/libjitplus.so
+lib/libjitplus.so.0
+lib/libjitplus.so.0.0.1
+log
