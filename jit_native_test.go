@@ -22,7 +22,7 @@ func (s *MySuite) TestJitCallingNative(c *C) {
 
 	// This is native call
 	sig := NewSignature(Int(), []Type{Int(), Int()})
-	res := f.CallNative("NativeMult", NativeMultPtr(), sig, x, y)
+	res := f.CallNative("NativeMult", test_native_mult_ptr(), sig, x, y)
 	// f.Store(x, res)
 	f.StoreRelative(result, 0, res)
 
