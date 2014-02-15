@@ -204,7 +204,7 @@ func (f *Function) CallNative(name string, target unsafe.Pointer, sig *Signature
 			C.CString(name),
 			target,
 			sig.C, (*C.jit_value_t)(nil),
-            C.uint(0), C.JIT_CALL_NOTHROW)}
+			C.uint(0), C.JIT_CALL_NOTHROW)}
 	} else {
 		args := make([]C.jit_value_t, len(values))
 		for i := range values {
