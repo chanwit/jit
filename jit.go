@@ -2,7 +2,7 @@ package jit
 
 /*
 #cgo CFLAGS: -I./include
-#cgo LDFLAGS: -L./lib -lm -ljit
+#cgo linux,amd64 LDFLAGS: -L./lib -lm -ljit
 
 #include <stdio.h>
 #include <jit/jit.h>
