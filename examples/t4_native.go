@@ -46,11 +46,13 @@ func main() {
 	f.Store(x, res)
 	f.StoreRelative(result, 0, x)
 
+	f.Dump("foo [uncompiled]")
+
 	// Compile the function
 	f.Compile()
 
 	// Dump the result to standard output
-	f.Dump("foo")
+	f.Dump("foo [compiled]")
 
 	// Unlock the context
 	ctx.BuildEnd()
