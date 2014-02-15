@@ -184,7 +184,7 @@ func (f *Function) TailCall(target *Function, values ...*Value) *Value {
 	}
 }
 
-func (f *Function) Call(target *Function, values []*Value) *Value {
+func (f *Function) Call(target *Function, values ...*Value) *Value {
 	if len(values) == 0 {
 		return &Value{C.jit_insn_call(f.C,
 			C.CString("noname"),

@@ -30,12 +30,12 @@ func main() {
 	f.BranchIfNot(t2, label2)
 
 	// return gcd(x, y-x)
-	t3 := f.Call(f, []*Value{x, f.Sub(y, x)})
+	t3 := f.Call(f, x, f.Sub(y, x))
 	f.Return(t3)
 
 	f.Label(label2)
 	// return gcd(x-y, y)
-	t4 := f.Call(f, []*Value{f.Sub(x, y), y})
+	t4 := f.Call(f, f.Sub(x, y), y)
 	f.Return(t4)
 
 	f.Compile()
