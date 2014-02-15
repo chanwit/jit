@@ -168,6 +168,14 @@ func (f *Function) LessThan(a, b *Value) *Value {
 	return &Value{C.jit_insn_lt(f.C, a.C, b.C)}
 }
 
+func unwrap(values []*Value) *C.jit_value_t {
+    args := make([]C.jit_value_t, len(values))
+    for i := range values {
+        args[i] = values[i].C
+    }
+    return (*C.jit_value_t)(&args[0])
+}
+
 func (f *Function) TailCall(target *Function, values ...*Value) *Value {
 	if len(values) == 0 {
 		return &Value{C.jit_insn_call(f.C,
@@ -179,7 +187,7 @@ func (f *Function) TailCall(target *Function, values ...*Value) *Value {
 		return &Value{C.jit_insn_call(f.C,
 			C.CString("noname"),
 			target.C, nil,
-			(*C.jit_value_t)(unsafe.Pointer(values[0])),
+			unwrap(values),
 			C.uint(len(values)), C.JIT_CALL_TAIL)}
 	}
 }
@@ -195,7 +203,7 @@ func (f *Function) Call(target *Function, values ...*Value) *Value {
 		return &Value{C.jit_insn_call(f.C,
 			C.CString("noname"),
 			target.C, nil,
-			(*C.jit_value_t)(unsafe.Pointer(values[0])),
+            unwrap(values),
 			C.uint(len(values)), C.int(0))}
 	}
 }
@@ -211,7 +219,7 @@ func (f *Function) Call0(name string, target *Function, values ...*Value) *Value
 		return &Value{C.jit_insn_call(f.C,
 			C.CString(name),
 			target.C, nil,
-			(*C.jit_value_t)(unsafe.Pointer(values[0])),
+            unwrap(values),
 			C.uint(len(values)), C.int(0))}
 	}
 }
@@ -227,7 +235,7 @@ func (f *Function) CallNative(name string, target unsafe.Pointer, sig *Signature
 		return &Value{C.jit_insn_call_native(f.C,
 			C.CString(name),
 			target,
-			sig.C, (*C.jit_value_t)(unsafe.Pointer(values[0])),
+            sig.C, unwrap(values),
 			C.uint(len(values)), C.JIT_CALL_NOTHROW)}
 	}
 }
