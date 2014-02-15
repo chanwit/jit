@@ -48,28 +48,20 @@ type Label struct {
 	C C.jit_label_t
 }
 
-var intType = Type{C.jit_type_int}
-
 func Int() Type {
-	return intType
+	return Type{C.jit_type_int}
 }
-
-var uintType = Type{C.jit_type_uint}
 
 func UInt() Type {
-	return uintType
+	return Type{C.jit_type_uint}
 }
-
-var voidType = Type{C.jit_type_void}
 
 func Void() Type {
-	return voidType
+	return Type{C.jit_type_void}
 }
 
-var voidPtrType = Type{C.jit_type_void_ptr}
-
 func VoidPtr() Type {
-	return voidPtrType
+	return Type{C.jit_type_void_ptr}
 }
 
 func NewContext() *Context {
